@@ -1,0 +1,1 @@
+# Simple tree db, operating with either integers or floats
