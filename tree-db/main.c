@@ -17,12 +17,22 @@ pKey personGetKey(pElement pers){
 }
 
 void personDelete(pElement pers){
+	/* Delete function specific to Person data
+	
+	:param pers: pointer to Person data
+	*/
     pPerson pTemp = (pPerson)pers;
     free(pTemp->name);
     free(pTemp);
 }
 
 int personKeyCmp(pKey key1, pKey key2){
+	/* Compare function specific to Person data
+	
+	:param key1: Person data key
+	:param key2: Person data key
+	:return: key1 bigger -> 1; equal -> 0; key1 smaller -> -1 
+	*/
     if(*(int*)key1 == *(int*)key2)
         return 0;
     else if(*(int*)key1 < *(int*)key2)
@@ -32,11 +42,19 @@ int personKeyCmp(pKey key1, pKey key2){
 }
 
 void personPrint(pElement pers){
+	/* Print function specific for Person data
+	*/
     pPerson pTemp = (pPerson)pers;
     printf("\nName: %s ID: %d", pTemp->name, pTemp->id);
 }
 
 pPerson personCreate(char *name, int id){
+	/* Create Person data structure
+	
+	:param name: Name string
+	:param id: id
+	:return: pointer to Person data
+	*/
     pPerson pPers;
     if((pPers = (pPerson)malloc(sizeof(Person))) != NULL){
         pPers->id = id;

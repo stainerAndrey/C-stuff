@@ -4,12 +4,25 @@
 #include "treeAdt.h"
 
 typedef struct treeNode{
+	/* Tree node
+	
+	:param pKey: void pointer to node data
+	:param left: pointer to left node
+	:param right: pointer to right node
+	*/
     pKey data;
     pTreeNode left;
     pTreeNode right;
 }treeNode;
 
 Bool internalFind(pTreeNode root, pElement data, compKeys cmpFunc, getKey getFunc){
+	/* Check if data exists in tree
+	
+	:param root: pointer to tree root
+	:param data: data we a searching for inside the tree
+	:param cmpFunc: function to compare specific data type
+	:param getFunc: function to extract key from data
+	*/
     while(root != NULL){
         if(cmpFunc(getFunc(root->data), getFunc(data)) == 0)
             return TRUE;
@@ -22,6 +35,11 @@ Bool internalFind(pTreeNode root, pElement data, compKeys cmpFunc, getKey getFun
 }
 
 int treeHight(pTreeNode root){
+	/* Calculate tree hight
+	
+	:param root: pointer to tree root
+	:return: tree hight
+	*/
     int right, left;
     if(root == NULL)
         return -1;
@@ -33,9 +51,19 @@ int treeHight(pTreeNode root){
     
 }
 
-Bool insertNode(pTreeNode root, pTreeNode *rootOrigin, pElement data, compKeys cmpfunc, getKey getFunc, delElement delFunc){
+Bool insertNode(pTreeNode root, pTreeNode *rootOrigin, pElement data, compKeys cmpFunc, getKey getFunc, delElement delFunc){
+	/* Insert new data into the tree
+	
+	:param root: pointer to the tree root
+	:param *rootOrigin: pointer to the root pointer in case tree is empty
+	:param data: data to insert
+	:param cmpFunc: type specific function to compare
+	:param getFunc: type specific function to get data key
+	:param delFunc: type specific function to delete element
+	:return: True if insertion is successful, False otherwise 
+	*/
     pTreeNode newNode;
-    if(!internalFind(root, data, cmpfunc, getFunc)){
+    if(!internalFind(root, data, cmpFunc, getFunc)){
         if((newNode = (pTreeNode)malloc(sizeof(treeNode))) != NULL){
             newNode->data = data;
             newNode->left = NULL;
@@ -44,13 +72,13 @@ Bool insertNode(pTreeNode root, pTreeNode *rootOrigin, pElement data, compKeys c
                 *rootOrigin = newNode;
                 return TRUE;
             } else {
-                while((cmpfunc(getFunc(root->data),getFunc(data)) == 1 && root->left != NULL) || (cmpfunc(getFunc(root->data), getFunc(data)) == -1 && root->right != NULL)){
-                    if(cmpfunc(getFunc(root->data), getFunc(data)) == 1)
+                while((cmpFunc(getFunc(root->data),getFunc(data)) == 1 && root->left != NULL) || (cmpFunc(getFunc(root->data), getFunc(data)) == -1 && root->right != NULL)){
+                    if(cmpFunc(getFunc(root->data), getFunc(data)) == 1)
                         root = root->left;
                     else
                         root = root->right;
                 }
-                if(cmpfunc(getFunc(root->data), getFunc(data)) == 1)
+                if(cmpFunc(getFunc(root->data), getFunc(data)) == 1)
                     root->left = newNode;
                 else
                     root->right = newNode;
@@ -67,6 +95,11 @@ Bool insertNode(pTreeNode root, pTreeNode *rootOrigin, pElement data, compKeys c
 }
 
 void printPostorder(pTreeNode root, printElement printFunc){
+	/* Output tree in postorder
+	
+	:param root: tree root
+	:param printFunc: type specific function to print element
+	*/
     if(!root)
         return;
     printPostorder(root->left, printFunc);
@@ -75,6 +108,15 @@ void printPostorder(pTreeNode root, printElement printFunc){
 }
 
 int nodeHight(pTreeNode root, pElement data, compKeys cmpFunc, getKey getFunc, delElement delFunc){
+	/* Return node height with passed data
+	
+	:param root: pointer to tree root
+	:param data: pointer to data
+	:param compFunc: type specific function to compare data
+	:param getFunc: type specific function to extract data key
+	:param delFunc: type specific function do delete data
+	:return: Height of a node with same data as passed, -1 if not found
+	*/
     if(internalFind(root, data, cmpFunc, getFunc)){
         if(root){
             while(cmpFunc(getFunc(root->data),getFunc(data))){
@@ -96,6 +138,12 @@ int nodeHight(pTreeNode root, pElement data, compKeys cmpFunc, getKey getFunc, d
 }
 
 void printSmallK(pTreeNode root, printElement printFunc, int *k){
+	/* Print k smallest values in tree
+	
+	:param root: pointer to tree root
+	:param printFunc: type specific function to print element
+	:param k: number of elements to print
+	*/
     if(!root)
         return;
     printSmallK(root->left, printFunc, k);
@@ -107,6 +155,11 @@ void printSmallK(pTreeNode root, printElement printFunc, int *k){
 }
 
 void freeTree(pTreeNode *root, delElement delFunc){
+	/* Empty tree and deallocate memory
+	
+	:param root: pointer to root pointer
+	:delFunc: type specific function to remove node
+	*/
     if(*root == NULL)
         return;
     freeTree(&(*root)->left, delFunc);
